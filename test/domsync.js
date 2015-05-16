@@ -1,7 +1,6 @@
 var test = require('tape');
 var DomSync = require('../');
 var Dom = require('scene-dom');
-var stream = require('stream');
 
 /**
  * Simple mock socket that lets us feed data in & out
@@ -56,8 +55,7 @@ test('domsync', function (t) {
     var socket = new MockSocket();
 
     var doc = Dom.createDocument();
-    var sync = new DomSync(doc, socket);
-    sync.start();
+    (new DomSync(doc, socket)).start();
 
     socket.sendTestData('<packet><box uuid="1" id="el1" position="1 2 3" /></packet>');
     socket.sendTestData('<packet><box uuid="2" id="el2" position="4 5 6" />'
@@ -73,8 +71,7 @@ test('domsync', function (t) {
     var socket = new MockSocket();
 
     var doc = Dom.createDocument();
-    var sync = new DomSync(doc, socket);
-    sync.start();
+    (new DomSync(doc, socket)).start();
 
     socket.sendTestData('<packet><box uuid="1a2b" id="el1" position="1 2 3" rotation="0 1 0" /></packet>');
     socket.sendTestData('<packet><box uuid="1a2b" id="el2" position="4 5 6" material="test" /></packet>');
@@ -83,7 +80,6 @@ test('domsync', function (t) {
     t.equals('4 5 6', doc.getElementById('el2').position.toString(), 'attributes updated correctly');
     t.equals('0 1 0', doc.getElementById('el2').rotation.toString(), 'skipped attributes are preserved');
     t.equals('test', doc.getElementById('el2').material.toString(), 'new attributes are added');
-    sync.stop();
     t.end();
   });
 
@@ -91,13 +87,12 @@ test('domsync', function (t) {
     var socket = new MockSocket();
 
     var doc = Dom.createDocument();
-    var sync = new DomSync(doc, socket);
-    sync.start();
+    (new DomSync(doc, socket)).start();
 
     socket.sendTestData('<packet><box uuid="1a2b" position="1 2 3" rotation="0 1 0" /></packet>');
     socket.sendTestData('<packet><sphere uuid="1a2b" rotation="0 0 0" /></packet>');
 
-    t.equals('<scene><sphere uuid="1a2b" position="1 2 3" rotation="0 0 0"></sphere></scene>', doc.scene.toString());
+    t.equals(doc.scene.toString(), '<scene><sphere uuid="1a2b" position="1 2 3" rotation="0 0 0"></sphere></scene>');
     t.end();
   });
 
