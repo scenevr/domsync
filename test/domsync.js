@@ -96,5 +96,37 @@ test('domsync', function (t) {
     t.end();
   });
 
+  test('dom changes will emit packets', function (t) {
+    var socket = new MockSocket();
+
+    var doc = Dom.createDocument();
+    var sync = new DomSync(doc, socket);
+    sync.start();
+
+    var b = doc.createElement('box');
+    b.position = '1 2 3';
+    doc.scene.appendChild(b);
+
+    // Trigger the send process, normally runs on a setInterval() timer
+    sync.sendChanges();
+
+    b.position = '4 5 6';
+
+    // Need a 0-timeout to allow Object.observe() to run
+    setTimeout(function () {
+      sync.sendChanges();
+
+      doc.scene.removeChild(b);
+      sync.sendChanges();
+
+      var packets = socket.popTestData();
+      t.equals(packets.length, 3);
+      t.equals(packets[0], '<packet><box uuid="' + b.uuid + '" position="1 2 3"></box></packet>', 'New nodes send element tags');
+      t.equals(packets[1], '<packet><box uuid="' + b.uuid + '" position="4 5 6"></box></packet>', 'Updated nodes send element tags');
+      t.equals(packets[2], '<packet><dead uuid="' + b.uuid + '" /></packet>', 'Removed nodes send <dead> tags');
+      t.end();
+    }, 0);
+  });
+
   t.end();
 });
