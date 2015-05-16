@@ -1,0 +1,28 @@
+{
+  "name": "scene-domsync",
+  "version": "0.0.1",
+  "description": "Synchronises changes to a scene-dom over a websocket or other stream",
+  "main": "lib/domsync.js",
+  "scripts": {
+    "test": "./node_modules/.bin/tape test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/scenevr/domsync.git"
+  },
+  "author": "",
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/scenevr/domsync/issues"
+  },
+  "homepage": "https://github.com/scenevr/domsync",
+  "dependencies": {
+    "dom-lite": "^0.4.0",
+    "htmlparser2": "^3.8.2",
+    "scene-dom": "^1.0.1"
+  },
+  "devDependencies": {
+    "semistandard": "^4.0.3",
+    "tape": "^3.5.0"
+  }
+}
