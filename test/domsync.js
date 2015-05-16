@@ -49,8 +49,8 @@ test('domsync', function (t) {
     var socket = new MockSocket();
 
     var doc = Dom.createDocument();
-    (new DomSync(doc)).connectSocket(socket);
- 
+    (new DomSync(doc)).addConnection(socket);
+
     socket.sendTestData('<packet><box uuid="1" id="el1" position="1 2 3" /></packet>');
 
     t.equals('1 2 3', doc.getElementById('el1').position.toString());
@@ -61,7 +61,7 @@ test('domsync', function (t) {
     var socket = new MockSocket();
 
     var doc = Dom.createDocument();
-    (new DomSync(doc)).connectSocket(socket);
+    (new DomSync(doc)).addConnection(socket);
 
     socket.sendTestData('<packet><box uuid="1" id="el1" position="1 2 3" /></packet>');
     socket.sendTestData('<packet><box uuid="2" id="el2" position="4 5 6" />'
@@ -77,7 +77,7 @@ test('domsync', function (t) {
     var socket = new MockSocket();
 
     var doc = Dom.createDocument();
-    (new DomSync(doc)).connectSocket(socket);
+    (new DomSync(doc)).addConnection(socket);
 
     socket.sendTestData('<packet><box uuid="1a2b" id="el1" position="1 2 3" rotation="0 1 0" /></packet>');
     socket.sendTestData('<packet><box uuid="1a2b" id="el2" position="4 5 6" material="test" /></packet>');
@@ -93,7 +93,7 @@ test('domsync', function (t) {
     var socket = new MockSocket();
 
     var doc = Dom.createDocument();
-    (new DomSync(doc)).connectSocket(socket);
+    (new DomSync(doc)).addConnection(socket);
 
     socket.sendTestData('<packet><box uuid="1a2b" position="1 2 3" rotation="0 1 0" /></packet>');
     socket.sendTestData('<packet><sphere uuid="1a2b" rotation="0 0 0" /></packet>');
@@ -107,7 +107,7 @@ test('domsync', function (t) {
 
     var doc = Dom.createDocument();
     var sync = new DomSync(doc);
-    sync.connectSocket(socket);
+    sync.addConnection(socket);
 
     var b = doc.createElement('box');
     b.position = '1 2 3';
@@ -141,9 +141,9 @@ test('domsync', function (t) {
 
     var doc = Dom.createDocument();
     var sync = new DomSync(doc);
-    sync.connectSocket(socket1);
-    sync.connectSocket(socket2);
-    sync.connectSocket(socket3);
+    sync.addConnection(socket1);
+    sync.addConnection(socket2);
+    sync.addConnection(socket3);
 
     socket1.sendTestData('<packet><box uuid="1" position="1 2 3" /></packet>');
     socket2.sendTestData('<packet><box uuid="2" position="4 5 6" /></packet>');
@@ -161,8 +161,8 @@ test('domsync', function (t) {
 
     var doc = Dom.createDocument();
     var sync = new DomSync(doc);
-    sync.connectSocket(socket1);
-    sync.connectSocket(socket2);
+    sync.addConnection(socket1);
+    sync.addConnection(socket2);
 
     var b = doc.createElement('box');
     b.uuid = 1;
@@ -184,9 +184,9 @@ test('domsync', function (t) {
 
     var doc = Dom.createDocument();
     var sync = new DomSync(doc);
-    sync.connectSocket(socket1);
-    sync.connectSocket(socket2);
-    sync.disconnectSocket(socket1);
+    sync.addConnection(socket1);
+    sync.addConnection(socket2);
+    sync.removeConnection(socket1);
 
     socket1.sendTestData('<packet><box uuid="1" position="1 2 3" /></packet>');
     socket2.sendTestData('<packet><box uuid="2" position="4 5 6" /></packet>');
@@ -202,9 +202,9 @@ test('domsync', function (t) {
 
     var doc = Dom.createDocument();
     var sync = new DomSync(doc);
-    sync.connectSocket(socket1);
-    sync.connectSocket(socket2);
-    sync.disconnectSocket(socket1);
+    sync.addConnection(socket1);
+    sync.addConnection(socket2);
+    sync.removeConnection(socket1);
 
     var b = doc.createElement('box');
     b.uuid = 1;
